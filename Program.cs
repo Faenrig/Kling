@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Kling
 {
-    static class Program
+    public static class Program
     {
         /// <summary>
         /// The main entry point for the application.
@@ -15,9 +12,14 @@ namespace Kling
         [STAThread]
         static void Main()
         {
-            bool createdNew = false;
-            string mutexName = System.Reflection.Assembly.GetExecutingAssembly().GetType().GUID.ToString();
-            using (System.Threading.Mutex mutex = new System.Threading.Mutex(false, mutexName, out createdNew))
+            string mutexName = System
+                .Reflection
+                .Assembly
+                .GetExecutingAssembly()
+                .GetType()
+                .GUID.ToString();
+
+            using (Mutex mutex = new Mutex(false, mutexName, out bool createdNew))
             {
                 if (!createdNew)
                 {
@@ -27,6 +29,7 @@ namespace Kling
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+
                 try
                 {
                     Context context = new Context();

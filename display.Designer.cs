@@ -1,6 +1,6 @@
 ﻿namespace Kling
 {
-    partial class display
+    partial class Display
     {
         /// <summary>
         /// Required designer variable.
@@ -64,4 +64,3 @@
         private System.Windows.Forms.Label label1;
     }
 }
-

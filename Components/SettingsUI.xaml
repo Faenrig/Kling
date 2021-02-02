@@ -50,7 +50,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Display Time:" />
-                <Slider Interval="1" ValueChanged="_timeSlider_ValueChanged" Name="_timeSlider" Maximum="10" Value="2" Grid.Column="1"/>
+                <Slider Interval="1" ValueChanged="TimeSliderValueChanged" Name="_timeSlider" Maximum="10" Value="2" Grid.Column="1"/>
             </Grid>
             <TextBlock Name="_timeText" FontStyle="Italic" FontSize="11" Margin="110,5,0,0" Text="2 seconds, till the text will fade out."/>
 

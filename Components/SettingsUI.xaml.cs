@@ -13,62 +13,69 @@ namespace Components
     /// </summary>
     public partial class SettingsUI : Window
     {
-        int RWidth, RHeight;
+        private int _RWidth, _RHeight;
+
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
+            var regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
+
         public SettingsUI(int height, int width)
         {
             InitializeComponent();
-            RWidth = width;
-            RHeight = height;
+            _RWidth = width;
+            _RHeight = height;
 
             // Setting Options for Location combo box
             _locationComBo.ItemsSource = new string[] { "Top Left", "Top Right", "Bottom Left", "Bottom Right" };
             _cancel.Click += (o, e) => { Close(); };
+
             _save.Click += (o, e) =>
             {
-              File.WriteAllText(@"config.ini",
-              "[Settings]" + Environment.NewLine +
-              $"displayindex={_locationComBo.SelectedIndex.ToString()}" + Environment.NewLine +
-              $"xaxis={_xaxis.Text}" + Environment.NewLine +
-              $"yaxis={_yaxis.Text}" + Environment.NewLine +
-              $"displaytime={(int)_timeSlider.Value}" + Environment.NewLine +
-              $"notify={_messageCheckBox.IsChecked.ToString()}" + Environment.NewLine +
-              $"logkeys={_logkeys.IsChecked.ToString()}" + Environment.NewLine +
-              $"stdkeys={_standardCheckBox.IsChecked.ToString()}" + Environment.NewLine);
+                File.WriteAllText(@"config.ini",
+                "[Settings]" + Environment.NewLine +
+                $"displayindex={_locationComBo.SelectedIndex}" + Environment.NewLine +
+                $"xaxis={_xaxis.Text}" + Environment.NewLine +
+                $"yaxis={_yaxis.Text}" + Environment.NewLine +
+                $"displaytime={(int)_timeSlider.Value}" + Environment.NewLine +
+                $"notify={_messageCheckBox.IsChecked}" + Environment.NewLine +
+                $"logkeys={_logkeys.IsChecked}" + Environment.NewLine +
+                $"stdkeys={_standardCheckBox.IsChecked}" + Environment.NewLine);
+                
                 System.Windows.MessageBox.Show("Restart the application in order to apply the settings", "Notice", MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             };
-            loadconfigs();
+
+            LoadConfigs();
             _locationComBo.SelectionChanged += (o, e) => {
                 var ht = SystemInformation.VirtualScreen.Height;
                 var wt = SystemInformation.VirtualScreen.Width;
+
                 switch (_locationComBo.SelectedIndex)
                 {
                     case 0:
-                        updateValues("20", "20");
+                        UpdateValues("20", "20");
                         break;
                     case 1:
-                        updateValues((wt - RWidth).ToString(), "20");
+                        UpdateValues((wt - _RWidth).ToString(), "20");
                         break; 
                     case 2:
-                        updateValues("20", (ht - Convert.ToInt16(RHeight) - 60).ToString());
+                        UpdateValues("20", (ht - Convert.ToInt16(_RHeight) - 60).ToString());
                         break;
                     case 3:
-                        updateValues((wt - RWidth).ToString(), (ht - Convert.ToInt16(RHeight) - 60).ToString());
+                        UpdateValues((wt - _RWidth).ToString(), (ht - Convert.ToInt16(_RHeight) - 60).ToString());
                         break;
                 }
             };
         }
-        private void updateValues(string x, string y)
+        private void UpdateValues(string x, string y)
         {
             _xaxis.Text = x;
             _yaxis.Text = y;
         }
-        private void loadconfigs()
+
+        private void LoadConfigs()
         {
             if (File.Exists(@"config.ini"))
             {
@@ -83,13 +90,13 @@ namespace Components
             }
         }
 
-        private void _timeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void TimeSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
            try
-            {
+           {
                 _timeText.Text = $"{(int)e.NewValue} seconds, till the text will fade out.";
-            }
-            catch { }
+           }
+           catch { }
         }
     }
 }
